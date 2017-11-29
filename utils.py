@@ -65,7 +65,7 @@ def spiral(n):
     X /= np.max(abs(X))
     return X, np.concatenate(Y)
 
-def gen_examples(batch,dataset,epsilon=0.006,dim=2):
+def gen_examples(batch,dataset,epsilon=0.012,dim=2, epsilon2 = 0.012):
     def cart2pol(x, y):
         rho = np.sqrt(x**2 + y**2)
         phi = np.arctan2(y, x)
@@ -76,14 +76,19 @@ def gen_examples(batch,dataset,epsilon=0.006,dim=2):
         y = rho * np.sin(phi)
         return(x, y)
     
-    x = np.random.uniform(-1.2,1.2,size=(batch,dim))
+    x = np.random.uniform(-2,2,size=(batch,dim))
     
     for j in range(batch):
         x1 = x[j,0] * np.ones(dataset.shape[0])
         x2 = x[j,1] * np.ones(dataset.shape[0])
-        e = (x1-dataset[:,0])**2+(x2-dataset[:,1])**2
-        if np.min(e)<epsilon:
-            x[j,0]=0
-            x[j,1]=0
+        e = np.sqrt((x1-dataset[:,0])**2+(x2-dataset[:,1])**2)
+        while np.min(e)<0.1 or np.max(e)>2:
+            x[j,0]= np.random.uniform(-2,2)
+            x[j,1]= np.random.uniform(-2,2)
+            x1 = x[j,0] * np.ones(dataset.shape[0])
+            x2 = x[j,1] * np.ones(dataset.shape[0])
+            e = np.sqrt((x1-dataset[:,0])**2+(x2-dataset[:,1])**2)
+
+       
         
     return x
