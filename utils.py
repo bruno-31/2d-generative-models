@@ -26,7 +26,9 @@ def plot_contours(ax, predict, xx, yy, **params):
 #     Z[Z<0]=0
 #     Z[Z>0]=1
     Z = Z.reshape(xx.shape)
-    out = ax.contourf(xx, yy, Z, int(np.max(Z)),**params)
+    level = int(np.max(Z))
+    level = 10
+    out = ax.contourf(xx, yy, Z, level,**params)
     return out
 
 def make_meshgrid(x_min,x_max,y_min,y_max, h=.02):
@@ -82,7 +84,7 @@ def gen_examples(batch,dataset,epsilon=0.012,dim=2, epsilon2 = 0.012):
         x1 = x[j,0] * np.ones(dataset.shape[0])
         x2 = x[j,1] * np.ones(dataset.shape[0])
         e = np.sqrt((x1-dataset[:,0])**2+(x2-dataset[:,1])**2)
-        while np.min(e)<0.1 or np.max(e)>2:
+        while np.min(e)<0.1 or np.max(e)>2.15:
             x[j,0]= np.random.uniform(-2,2)
             x[j,1]= np.random.uniform(-2,2)
             x1 = x[j,0] * np.ones(dataset.shape[0])
